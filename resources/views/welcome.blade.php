@@ -23,16 +23,58 @@
             <div class="mt-6 p-4 bg-slate-700 rounded-lg border border-blue-500/50">
                 <p class="text-slate-300 text-sm mb-2 text-center">Твоя ссылка готова:</p>
                 <div class="flex items-center bg-slate-900 p-2 rounded border border-slate-600">
-                    <input type="text" readonly value="{{ session('short_url') }}"
+                    <input type="text" id="shortUrl" readonly value="{{ session('short_url') }}"
                            class="bg-transparent text-blue-400 font-mono text-sm w-full outline-none">
-                    <a href="{{ session('short_url') }}" target="_blank" class="ml-2 text-slate-400 hover:text-white">
-                        🔗
-                    </a>
+
+                    <button type="button" onclick="copyTextToClipboard()" class="ml-3 text-slate-400 hover:text-blue-400 transition-colors">
+                        <span id="copyIcon">📋</span>
+                    </button>
                 </div>
+                <p id="copyMessage" class="text-green-400 text-xs mt-2 text-center hidden font-medium">Скопировано!</p>
             </div>
         @endif
 
     </form>
 </div>
+
+<script>
+    function copyTextToClipboard() {
+        const copyText = document.getElementById("shortUrl");
+        const icon = document.getElementById("copyIcon");
+        const message = document.getElementById("copyMessage");
+
+        // Метод 1: Современный API
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(copyText.value).then(() => {
+                showSuccess(icon, message);
+            }).catch(err => {
+                fallbackCopy(copyText, icon, message);
+            });
+        } else {
+            // Метод 2: Запасной вариант для старых браузеров
+            fallbackCopy(copyText, icon, message);
+        }
+    }
+
+    function fallbackCopy(copyText, icon, message) {
+        copyText.select();
+        try {
+            document.execCommand('copy');
+            showSuccess(icon, message);
+        } catch (err) {
+            console.error('Fallback copy failed', err);
+        }
+    }
+
+    function showSuccess(icon, message) {
+        icon.innerText = '✅';
+        message.classList.remove('hidden');
+        setTimeout(() => {
+            icon.innerText = '📋';
+            message.classList.add('hidden');
+        }, 2000);
+    }
+</script>
+
 </body>
 </html>
