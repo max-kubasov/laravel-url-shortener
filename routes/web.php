@@ -3,9 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LinkController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [LinkController::class, 'index']);
 
 // 2. Принять длинную ссылку из формы (метод POST)
 Route::post('/shorten', [LinkController::class, 'store']);

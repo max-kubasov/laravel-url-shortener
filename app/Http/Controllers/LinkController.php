@@ -34,4 +34,12 @@ class LinkController extends Controller
         // 3. Отправляем пользователя на оригинальный сайт
         return redirect($link->original_url);
     }
+
+    public function index()
+    {
+        // Берем последние 10 ссылок, отсортированных по дате (новые сверху)
+        $links = \App\Models\Link::query()->latest()->take(8)->get();
+
+        return view('welcome', compact('links'));
+    }
 }
