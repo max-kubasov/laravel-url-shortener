@@ -10,7 +10,7 @@
     <h1 class="text-2xl font-bold mb-4 text-center text-white">Сократить ссылку</h1>
 
 
-    <form action="/shorten" method="POST">
+    <form action="{{ route('links.store') }}" method="POST">
         @csrf
         <input type="url" name="url" placeholder="Вставьте ссылку" required
                class="w-full bg-slate-700 border border-slate-600 p-2 rounded mb-4 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500">

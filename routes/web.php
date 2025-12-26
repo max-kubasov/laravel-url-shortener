@@ -1,12 +1,24 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LinkController;
+use App\Http\Controllers\ProfileController;
+use Illuminate\Support\Facades\Route;
 
-Route::get('/', [LinkController::class, 'index']);
+Route::get('/', [LinkController::class, 'index'])->name('home');
 
-// 2. Принять длинную ссылку из формы (метод POST)
-Route::post('/shorten', [LinkController::class, 'store']);
+Route::post('/links', [LinkController::class, 'store'])->name('links.store');
 
-// 3. Редирект с короткого кода на длинную ссылку (чуть позже напишем метод redirect)
-Route::get('/{code}', [LinkController::class, 'redirect']);
+
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+require __DIR__.'/auth.php';
+
+Route::get('/{link:short_code}', [LinkController::class, 'redirect'])->name('links.show');
