@@ -15,6 +15,12 @@ class LinkController extends Controller
             ? Link::where('user_id', auth()->id())->latest()->get()
             : collect(); // если не вошел, отдаем пустой список
 
+        // Проверяем, на какой странице мы находимся
+        // Если запрос пришел на /dashboard, отдаем в dashboard.blade.php
+        if (request()->routeIs('dashboard')) {
+            return view('dashboard', compact('links'));
+        }
+
         return view('welcome', compact('links'));
     }
 

@@ -9,9 +9,9 @@ Route::get('/', [LinkController::class, 'index'])->name('home');
 Route::post('/links', [LinkController::class, 'store'])->name('links.store');
 
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [LinkController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
