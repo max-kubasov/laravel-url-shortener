@@ -26,13 +26,18 @@ class LinkController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate(['url' => 'required|url']);
+        $request->validate(['original_url' => 'required|url']);
 
         $link = Link::create([
-            'original_url' => $request->url,
+            'original_url' => $request->original_url,
             'short_code'   => Str::random(6),
             'user_id'      => auth()->id(), // Привязываем ID юзера (может быть null, если гость)
         ]);
+
+        // Если это авторизованный пользователь, возвращаем его в дашборд с уведомлением
+        if (auth()->check()) {
+            return back()->with('success', 'Short link generated successfully!');
+        }
 
         return back()->with('short_url', url($link->short_code));
     }

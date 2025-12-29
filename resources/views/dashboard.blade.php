@@ -5,6 +5,41 @@
         </h2>
     </x-slot>
 
+    <div class="py-6">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 text-gray-900">
+                    <h3 class="text-lg font-semibold mb-4">Create a new short link</h3>
+
+                    <form action="{{ route('links.store') }}" method="POST" class="flex flex-col md:flex-row gap-4">
+                        @csrf
+                        <div class="flex-grow">
+                            <input
+                                type="url"
+                                name="original_url"
+                                placeholder="Paste your long URL here (https://...)"
+                                required
+                                class="w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                            >
+                        </div>
+                        <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded-md transition duration-150 ease-in-out">
+                            Shorten
+                        </button>
+                    </form>
+
+                    {{-- Отображение ошибок валидации --}}
+                    @if ($errors->any())
+                        <div class="mt-4 text-red-600 text-sm">
+                            @foreach ($errors->all() as $error)
+                                <p>{{ $error }}</p>
+                            @endforeach
+                        </div>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
@@ -29,9 +64,15 @@
                                                 <td class="py-2">{{ Str::limit($link->original_url, 50) }}</td>
                                                 <td class="py-2">
                                                     <div class="flex items-center space-x-2">
-                                                        <span id="url-{{ $link->id }}" class="text-blue-600 font-medium">
+                                                        <a
+                                                            href="{{ url($link->short_code) }}"
+                                                            id="url-{{ $link->id }}"
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            class="text-blue-600 font-medium hover:underline hover:text-blue-800 transition"
+                                                        >
                                                             {{ url($link->short_code) }}
-                                                        </span>
+                                                        </a>
 
                                                         <button
                                                             onclick="copyToClipboard('{{ url($link->short_code) }}', this)"
