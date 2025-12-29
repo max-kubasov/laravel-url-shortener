@@ -24,21 +24,21 @@
 </nav>
 
 <div class="bg-slate-800 p-8 rounded-lg shadow-xl w-96 border border-slate-700">
-    <h1 class="text-2xl font-bold mb-4 text-center text-white">Сократить ссылку</h1>
+    <h1 class="text-2xl font-bold mb-4 text-center text-white">Shorten your link</h1>
 
 
     <form action="{{ route('links.store') }}" method="POST">
         @csrf
-        <input type="url" name="url" placeholder="Вставьте ссылку" required
+        <input type="url" name="original_url" placeholder="Paste your link here..." required
                class="w-full bg-slate-700 border border-slate-600 p-2 rounded mb-4 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500">
 
         <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition">
-            Сократить
+            Shorten
         </button>
 
         @if(session('short_url'))
             <div class="mt-6 p-4 bg-slate-700 rounded-lg">
-                <p class="text-slate-300 text-sm mb-2 text-center">Твоя ссылка готова:</p>
+                <p class="text-slate-300 text-sm mb-2 text-center">Your link is ready:</p>
                 <div class="flex items-center bg-slate-900 p-2 rounded">
                     <input type="text" id="shortUrl" readonly value="{{ session('short_url') }}"
                            class="bg-transparent text-blue-400 font-mono text-sm w-full outline-none border-none focus:ring-0">
@@ -47,7 +47,7 @@
                         <span id="copyIcon">📋</span>
                     </button>
                 </div>
-                <p id="copyMessage" class="text-green-400 text-xs mt-2 text-center hidden font-medium">Скопировано!</p>
+                <p id="copyMessage" class="text-green-400 text-xs mt-2 text-center hidden font-medium">Copied!</p>
             </div>
         @endif
 
