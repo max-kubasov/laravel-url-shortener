@@ -28,9 +28,18 @@
                                             <tr class="border-b">
                                                 <td class="py-2">{{ Str::limit($link->original_url, 50) }}</td>
                                                 <td class="py-2">
-                                                    <a href="{{ route('links.show', $link->short_code) }}" class="text-blue-500">
-                                                        {{ $link->short_code }}
-                                                    </a>
+                                                    <div class="flex items-center space-x-2">
+                                                        <span id="url-{{ $link->id }}" class="text-blue-600 font-medium">
+                                                            {{ url($link->short_code) }}
+                                                        </span>
+
+                                                        <button
+                                                            onclick="copyToClipboard('{{ url($link->short_code) }}', this)"
+                                                            class="bg-gray-100 hover:bg-gray-200 text-gray-600 px-2 py-1 rounded text-xs transition flex items-center"
+                                                        >
+                                                            <span>Copy</span>
+                                                        </button>
+                                                    </div>
                                                 </td>
                                                 <td class="py-2">{{ $link->clicks }}</td>
                                                 <td class="py-2">
@@ -55,3 +64,23 @@
         </div>
     </div>
 </x-app-layout>
+
+
+<script>
+    function copyToClipboard(text, button) {
+        navigator.clipboard.writeText(text).then(() => {
+            // Меняем текст кнопки на время
+            const originalText = button.innerHTML;
+            button.innerHTML = '<span class="text-green-600">Copied!</span>';
+            button.classList.add('bg-green-50');
+
+            // Возвращаем как было через 2 секунды
+            setTimeout(() => {
+                button.innerHTML = originalText;
+                button.classList.remove('bg-green-50');
+            }, 2000);
+        }).catch(err => {
+            console.error('Ошибка при копировании: ', err);
+        });
+    }
+</script>
