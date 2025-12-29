@@ -33,6 +33,15 @@
                                                     </a>
                                                 </td>
                                                 <td class="py-2">{{ $link->clicks }}</td>
+                                                <td class="py-2">
+                                                    <form action="{{ route('links.destroy', $link) }}" method="POST" onsubmit="return confirm('Are you sure?')">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="text-red-500 hover:text-red-700 transition">
+                                                            DELETE
+                                                        </button>
+                                                    </form>
+                                                </td>
                                             </tr>
                                         @endforeach
                                         </tbody>

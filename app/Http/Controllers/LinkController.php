@@ -46,5 +46,17 @@ class LinkController extends Controller
         return redirect($link->original_url);
     }
 
+    public function destroy(\App\Models\Link $link)
+    {
+        // Проверка прав: если ID владельца ссылки не совпадает с ID текущего пользователя
+        if ($link->user_id !== auth()->id()) {
+            abort(403, 'У вас нет прав на удаление этой ссылки');
+        }
+
+        $link->delete();
+
+        return back()->with('success', 'Ссылка успешно удалена!');
+    }
+
 
 }
