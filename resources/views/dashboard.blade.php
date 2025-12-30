@@ -11,18 +11,30 @@
                 <div class="p-6 text-gray-900">
                     <h3 class="text-lg font-semibold mb-4">Create a new short link</h3>
 
-                    <form action="{{ route('links.store') }}" method="POST" class="flex flex-col md:flex-row gap-4">
+                    <form action="{{ route('links.store') }}" method="POST" class="flex flex-col md:flex-row gap-4 items-end">
                         @csrf
-                        <div class="flex-grow">
+                        <div class="flex-grow w-full">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Original URL</label>
                             <input
                                 type="url"
                                 name="original_url"
-                                placeholder="Paste your long URL here (https://...)"
+                                placeholder="https://..."
                                 required
                                 class="w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
                             >
                         </div>
-                        <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded-md transition duration-150 ease-in-out">
+
+                        <div class="w-full md:w-64">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Custom Alias (Optional)</label>
+                            <input
+                                type="text"
+                                name="custom_code"
+                                placeholder="e.g. summer-sale"
+                                class="w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                            >
+                        </div>
+
+                        <button type="submit" class="w-full md:w-auto bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded-md transition duration-150 ease-in-out h-[42px]">
                             Shorten
                         </button>
                     </form>

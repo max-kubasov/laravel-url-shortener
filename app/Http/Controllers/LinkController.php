@@ -26,11 +26,24 @@ class LinkController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate(['original_url' => 'required|url']);
+        // 1. Валидация
+        $request->validate([
+            'original_url' => 'required|url',
+            'custom_code'  => [
+                'nullable',
+                'alpha_dash', // только буквы, цифры, тире и подчеркивания
+                'min:3',
+                'max:20',
+                'unique:links,short_code' // проверка уникальности в таблице links, колонка short_code
+            ],
+        ]);
+
+        // 2. Логика выбора кода: если ввели кастомный — берем его, если нет — генерируем случайный
+        $shortCode = $request->custom_code ?? \Illuminate\Support\Str::random(6);
 
         $link = Link::create([
             'original_url' => $request->original_url,
-            'short_code'   => Str::random(6),
+            'short_code'   => $shortCode,
             'user_id'      => auth()->id(), // Привязываем ID юзера (может быть null, если гость)
         ]);
 
