@@ -6,7 +6,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [LinkController::class, 'index'])->name('home');
 
-Route::post('/links', [LinkController::class, 'store'])->name('links.store');
+Route::post('/links', [LinkController::class, 'store'])
+    ->middleware('throttle:shorten_links')
+    ->name('links.store');
 
 
 Route::get('/dashboard', [LinkController::class, 'index'])
