@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Link;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class LinkController extends Controller
 {
@@ -76,5 +77,22 @@ class LinkController extends Controller
         return back()->with('success', 'Ссылка успешно удалена!');
     }
 
+    public function downloadQr(Link $link, $format)
+    {
+        $url = url($link->short_code);
+
+        // Генерируем контент QR-кода
+        $qrCode = QrCode::format($format)
+            ->size(500)
+            ->margin(1)
+            ->generate($url);
+
+        $fileName = "qr-purelnk-{$link->short_code}.{$format}";
+        $contentType = ($format === 'png') ? 'image/png' : 'image/svg+xml';
+
+        return response($qrCode)
+            ->header('Content-Type', $contentType)
+            ->header('Content-Disposition', "attachment; filename=\"{$fileName}\"");
+    }
 
 }

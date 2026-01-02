@@ -67,6 +67,7 @@
                                         <tr class="border-b">
                                             <th class="py-2">Original URL</th>
                                             <th class="py-2">Short Link</th>
+                                            <th class="py-2">QR</th>
                                             <th class="py-2">Clicks</th>
                                         </tr>
                                         </thead>
@@ -92,6 +93,19 @@
                                                         >
                                                             <span>Copy</span>
                                                         </button>
+                                                    </div>
+                                                </td>
+                                                <td class="px-2 py-2">
+                                                    <div class="mb-2">
+                                                        {!! QrCode::size(30)->generate(url($link->short_code)) !!}
+                                                    </div>
+
+                                                    <div class="flex space-x-2 text-xs">
+{{--                                                        <a href="{{ route('links.qr', [$link->short_code, 'png']) }}"--}}
+{{--                                                           class="text-blue-600 hover:underline">PNG</a>--}}
+
+                                                        <a href="{{ route('links.qr', [$link->short_code, 'svg']) }}"
+                                                           class="text-green-600 hover:underline">SVG</a>
                                                     </div>
                                                 </td>
                                                 <td class="py-2">{{ $link->clicks }}</td>

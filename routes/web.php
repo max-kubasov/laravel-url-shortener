@@ -10,6 +10,12 @@ Route::post('/links', [LinkController::class, 'store'])
     ->middleware('throttle:shorten_links')
     ->name('links.store');
 
+// Маршрут для генерации и скачивания QR-кода
+Route::get('/links/{link:short_code}/qr/{format}', [LinkController::class, 'downloadQr'])
+    ->name('links.qr')
+    ->where('format', 'png|svg')
+    ->middleware('auth'); // Только для залогиненных
+
 
 Route::get('/dashboard', [LinkController::class, 'index'])
     ->middleware(['auth', 'verified'])
