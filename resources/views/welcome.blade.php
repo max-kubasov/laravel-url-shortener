@@ -22,6 +22,12 @@
         </div>
     @endif
 </nav>
+@if ($errors->has('original_url'))
+    <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4" role="alert">
+        <p class="font-bold">Security Warning!</p>
+        <p>{{ $errors->first('original_url') }}</p>
+    </div>
+@endif
 
 <div class="bg-slate-800 p-8 rounded-lg shadow-xl w-96 border border-slate-700">
     <h1 class="text-2xl font-bold mb-4 text-center text-white">Shorten your link</h1>

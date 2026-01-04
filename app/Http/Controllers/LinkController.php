@@ -6,6 +6,7 @@ use App\Models\Link;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use App\Services\GoogleSafeBrowsingService;
 
 class LinkController extends Controller
 {

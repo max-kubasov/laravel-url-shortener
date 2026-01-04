@@ -15,8 +15,8 @@ class GoogleSafeBrowsingService
         $this->apiKey = config('services.google.safe_browsing_key');
     }
 
-    public function isSafe(string $url): bool
-    {
+    public function isSafe(string $url): bool {
+
         if (!$this->apiKey) {
             return true; // Если ключа нет, пропускаем (чтобы сайт не сломался)
         }
