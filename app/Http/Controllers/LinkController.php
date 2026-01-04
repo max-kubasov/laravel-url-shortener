@@ -25,7 +25,7 @@ class LinkController extends Controller
         return view('welcome', compact('links'));
     }
 
-    public function store(Request $request)
+    public function store(Request $request, GoogleSafeBrowsingService $service)
     {
         // 1. Валидация
         $request->validate([
@@ -39,7 +39,15 @@ class LinkController extends Controller
             ],
         ]);
 
-        // 2. Логика выбора кода: если ввели кастомный — берем его, если нет — генерируем случайный
+        // 2. Получаем очищенный URL
+        $url = $request->input('original_url');
+
+        // 3. Дополнительная проверка безопасности через сервис
+        if (!$service->isSafe($url)) {
+            return back()->withErrors(['original_url' => 'This URL is flagged as unsafe by Google Safe Browsing.']);
+        }
+
+        // 4. Логика выбора кода: если ввели кастомный — берем его, если нет — генерируем случайный
         $shortCode = $request->custom_code ?? \Illuminate\Support\Str::random(6);
 
         $link = Link::create([
