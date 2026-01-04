@@ -1,56 +1,19 @@
-name: Deploy Website
+script: |
+  echo "--- ТЕКУЩАЯ ПАПКА ---"
+  pwd
+  cd /home/purelnk/htdocs/purelnk.com/
 
-on:
-  push:
-    branches:
-      - main
+  echo "--- ЧТО В ПАПКЕ (ls -la) ---"
+  ls -la
 
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+  echo "--- ПОСЛЕДНИЕ КОММИТЫ НА СЕРВЕРЕ ---"
+  git log -n 2 --oneline
 
-      - name: Deploy via SSH
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.REMOTE_HOST }}
-          username: ${{ secrets.REMOTE_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            cd /home/purelnk/htdocs/purelnk.com/
+  echo "--- ПРОВЕРКА КЛЮЧЕВОГО ФАЙЛА ---"
+  grep -n "GoogleSafeBrowsingService" app/Http/Controllers/LinkController.php || echo "Кода проверки НЕТ в файле"
 
-            # Принудительное обновление кода (лечит конфликты)
-            git fetch origin main
-            git reset --hard origin/main
+  git fetch origin main
+  git reset --hard origin/main
 
-            # Установка зависимостей от имени пользователя сайта
-            sudo -u purelnk composer install --no-dev --optimize-autoloader
-
-            # Миграции базы данных
-            sudo -u purelnk php artisan migrate --force
-
-            # Сборка фронтенда (Vite)
-            sudo -u purelnk npm install
-            sudo -u purelnk npm run build
-
-            # Полная очистка и прогрев кэша Laravel
-            sudo -u purelnk php artisan config:clear
-            sudo -u purelnk php artisan config:cache
-            sudo -u purelnk php artisan route:cache
-            sudo -u purelnk php artisan view:cache
-
-      - name: Send Telegram Notification
-        uses: appleboy/telegram-action@master
-        with:
-          to: ${{ secrets.TELEGRAM_TO }}
-          token: ${{ secrets.TELEGRAM_TOKEN }}
-          message: |
-            ✅ Deploy Successful!
-
-            Project: purelnk.com
-            Commit: ${{ github.event.head_commit.message }}
-            Author: ${{ github.actor }}
-
-            Check it out: https://purelnk.com
+  echo "--- ПОСЛЕДНИЙ КОММИТ ПОСЛЕ RESET ---"
+  git log -n 1 --oneline
