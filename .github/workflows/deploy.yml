@@ -20,7 +20,10 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd /home/purelnk/htdocs/purelnk.com/
-            git pull origin main
+
+            # Принудительное обновление кода (лечит конфликты)
+            git fetch origin main
+            git reset --hard origin/main
 
             # Установка зависимостей от имени пользователя сайта
             sudo -u purelnk composer install --no-dev --optimize-autoloader
@@ -32,7 +35,8 @@ jobs:
             sudo -u purelnk npm install
             sudo -u purelnk npm run build
 
-            # Очистка кэша Laravel
+            # Полная очистка и прогрев кэша Laravel
+            sudo -u purelnk php artisan config:clear
             sudo -u purelnk php artisan config:cache
             sudo -u purelnk php artisan route:cache
             sudo -u purelnk php artisan view:cache
