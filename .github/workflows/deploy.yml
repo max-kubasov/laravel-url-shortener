@@ -19,24 +19,33 @@ jobs:
           username: ${{ secrets.REMOTE_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            echo "--- ТЕКУЩАЯ ПАПКА ---"
-            pwd
+            # 1. Разрешаем Git работать с этой папкой (решает ошибку status 128)
+            git config --global --add safe.directory /home/purelnk/htdocs/purelnk.com
+
             cd /home/purelnk/htdocs/purelnk.com/
 
-            echo "--- ЧТО В ПАПКЕ (ls -la) ---"
-            ls -la
-
-            echo "--- ПОСЛЕДНИЕ КОММИТЫ НА СЕРВЕРЕ ---"
-            git log -n 2 --oneline
-
-            echo "--- ПРОВЕРКА КЛЮЧЕВОГО ФАЙЛА ---"
-            grep -n "GoogleSafeBrowsingService" app/Http/Controllers/LinkController.php || echo "Кода проверки НЕТ в файле"
-
+            echo "--- ОБНОВЛЕНИЕ КОДА ---"
             git fetch origin main
             git reset --hard origin/main
 
-            echo "--- ПОСЛЕДНИЙ КОММИТ ПОСЛЕ RESET ---"
-            git log -n 1 --oneline
+            echo "--- УСТАНОВКА ЗАВИСИМОСТЕЙ ---"
+            sudo -u purelnk composer install --no-dev --optimize-autoloader
+
+            echo "--- МИГРАЦИИ И КЭШ ---"
+            sudo -u purelnk php artisan migrate --force
+
+            # Сборка фронтенда
+            sudo -u purelnk npm install
+            sudo -u purelnk npm run build
+
+            # Очистка и прогрев кэша
+            sudo -u purelnk php artisan config:clear
+            sudo -u purelnk php artisan config:cache
+            sudo -u purelnk php artisan route:cache
+            sudo -u purelnk php artisan view:cache
+
+            echo "--- ПРОВЕРКА ФАЙЛА ПОСЛЕ ДЕПЛОЯ ---"
+            grep "GoogleSafeBrowsingService" app/Http/Controllers/LinkController.php
 
       - name: Send Telegram Notification
         uses: appleboy/telegram-action@master
