@@ -1,19 +1,53 @@
-script: |
-  echo "--- ТЕКУЩАЯ ПАПКА ---"
-  pwd
-  cd /home/purelnk/htdocs/purelnk.com/
+name: Deploy Website
 
-  echo "--- ЧТО В ПАПКЕ (ls -la) ---"
-  ls -la
+on:
+  push:
+    branches:
+      - main
 
-  echo "--- ПОСЛЕДНИЕ КОММИТЫ НА СЕРВЕРЕ ---"
-  git log -n 2 --oneline
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-  echo "--- ПРОВЕРКА КЛЮЧЕВОГО ФАЙЛА ---"
-  grep -n "GoogleSafeBrowsingService" app/Http/Controllers/LinkController.php || echo "Кода проверки НЕТ в файле"
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            echo "--- ТЕКУЩАЯ ПАПКА ---"
+            pwd
+            cd /home/purelnk/htdocs/purelnk.com/
 
-  git fetch origin main
-  git reset --hard origin/main
+            echo "--- ЧТО В ПАПКЕ (ls -la) ---"
+            ls -la
 
-  echo "--- ПОСЛЕДНИЙ КОММИТ ПОСЛЕ RESET ---"
-  git log -n 1 --oneline
+            echo "--- ПОСЛЕДНИЕ КОММИТЫ НА СЕРВЕРЕ ---"
+            git log -n 2 --oneline
+
+            echo "--- ПРОВЕРКА КЛЮЧЕВОГО ФАЙЛА ---"
+            grep -n "GoogleSafeBrowsingService" app/Http/Controllers/LinkController.php || echo "Кода проверки НЕТ в файле"
+
+            git fetch origin main
+            git reset --hard origin/main
+
+            echo "--- ПОСЛЕДНИЙ КОММИТ ПОСЛЕ RESET ---"
+            git log -n 1 --oneline
+
+      - name: Send Telegram Notification
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            ✅ Deploy Successful!
+
+            Project: purelnk.com
+            Commit: ${{ github.event.head_commit.message }}
+            Author: ${{ github.actor }}
+
+            Check it out: https://purelnk.com
