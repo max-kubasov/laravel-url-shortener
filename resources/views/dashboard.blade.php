@@ -93,7 +93,7 @@
                                     </div>
                                 </td>
                                 <td class="px-8 py-4 text-center">
-                                    <div class="inline-block p-1 bg-white border rounded-lg shadow-sm hover:scale-110 transition-transform">
+                                    <div class="inline-block p-1 bg-white border rounded-lg shadow-sm hover:scale-125 transition-transform">
                                         {!! QrCode::size(40)->generate(url($link->short_code)) !!}
                                     </div>
                                     <div class="mt-2">
