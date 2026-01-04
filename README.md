@@ -9,9 +9,11 @@ A clean and fast URL shortening service built with **Laravel 12** and **Tailwind
 * **SQLite Powered**: Lightweight and portable database.
 
 ## 🚀 Tech Stack
-* **Backend**: [Laravel 12](https://laravel.com)
-* **Frontend**: [Tailwind CSS](https://tailwindcss.com)
-* **Database**: SQLite
+
+* **Backend**: [PHP 8.5](https://www.php.net) + [Laravel 12](https://laravel.com)
+* **Frontend**: [Tailwind CSS](https://tailwindcss.com) + [Vite](https://vitejs.dev)
+* **Database**: [SQLite](https://www.sqlite.org)
+* **CI/CD**: [GitHub Actions](https://github.com/features/actions)
 
 ## 🛠️ Installation & Setup
 

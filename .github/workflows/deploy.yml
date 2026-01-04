@@ -36,3 +36,17 @@ jobs:
             sudo -u purelnk php artisan config:cache
             sudo -u purelnk php artisan route:cache
             sudo -u purelnk php artisan view:cache
+
+      - name: Send Telegram Notification
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            ✅ Deploy Successful!
+
+            Project: purelnk.com
+            Commit: ${{ github.event.head_commit.message }}
+            Author: ${{ github.actor }}
+
+            Check it out: https://purelnk.com
