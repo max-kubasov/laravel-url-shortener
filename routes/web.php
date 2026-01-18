@@ -3,8 +3,19 @@
 use App\Http\Controllers\LinkController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\LandingController;
 
 Route::get('/', [LinkController::class, 'index'])->name('home');
+
+// Blog Routes
+Route::get('/blog', [PostController::class, 'blogIndex'])->name('blog.index');
+Route::get('/news', [PostController::class, 'newsIndex'])->name('news.index');
+Route::get('/resources/{post}', [PostController::class, 'show'])->name('posts.show');
+
+// Landing (Solutions) Routes
+Route::get('/solutions/{landing}', [LandingController::class, 'show'])->name('landings.show');
+
 
 Route::post('/links', [LinkController::class, 'store'])
     ->middleware('throttle:shorten_links')
