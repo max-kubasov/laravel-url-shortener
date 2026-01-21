@@ -19,15 +19,15 @@
                     </p>
                 </header>
 
-                {{-- Основной текст статьи --}}
+                {{-- Основной текст новости --}}
                 <div class="prose prose-blue max-w-none">
                     {!! $post->content !!}
                 </div>
             </article>
 
             <div class="mt-8 text-center">
-                <a href="{{ route('blog.index') }}" class="text-blue-600 hover:underline">
-                    &larr; Back to all articles
+                <a href="{{ route('news.index') }}" class="text-blue-600 hover:underline">
+                    &larr; Back to all news
                 </a>
             </div>
         </div>

@@ -30,7 +30,7 @@ class PostController extends Controller
     }
 
     // Просмотр конкретной статьи или новости
-    public function show(Post $post)
+    public function showBlog(Post $post)
     {
         // Проверяем, опубликован ли пост
         if (!$post->is_published) {
@@ -38,5 +38,15 @@ class PostController extends Controller
         }
 
         return view('blog.show', compact('post'));
+    }
+
+    public function showNews(Post $post)
+    {
+        // Проверяем, опубликован ли пост
+        if (!$post->is_published) {
+            abort(404);
+        }
+
+        return view('news.show', compact('post'));
     }
 }

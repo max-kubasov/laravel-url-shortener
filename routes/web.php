@@ -10,8 +10,10 @@ Route::get('/', [LinkController::class, 'index'])->name('home');
 
 // Blog Routes
 Route::get('/blog', [PostController::class, 'blogIndex'])->name('blog.index');
+Route::get('/blog/{post}', [PostController::class, 'showBlog'])->name('blog.show');
+
 Route::get('/news', [PostController::class, 'newsIndex'])->name('news.index');
-Route::get('/resources/{post}', [PostController::class, 'show'])->name('posts.show');
+Route::get('/news/{post}', [PostController::class, 'showNews'])->name('news.show');
 
 // Landing (Solutions) Routes
 Route::get('/solutions/{landing}', [LandingController::class, 'show'])->name('landings.show');
