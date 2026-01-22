@@ -16,6 +16,11 @@
                     <p class="text-gray-600">{{ $post->excerpt }}</p>
                 </article>
             @endforeach
+
+            <div class="mt-8">
+                {{ $posts->links() }}
+            </div>
+
         </div>
     </div>
 @endsection

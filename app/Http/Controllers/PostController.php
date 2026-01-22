@@ -13,7 +13,7 @@ class PostController extends Controller
         $posts = Post::where('type', 'blog')
             ->where('is_published', true)
             ->latest()
-            ->paginate(10);
+            ->paginate(5);
 
         return view('blog.index', compact('posts'));
     }
@@ -24,7 +24,7 @@ class PostController extends Controller
         $news = Post::where('type', 'news')
             ->where('is_published', true)
             ->latest()
-            ->paginate(15);
+            ->paginate(5);
 
         return view('news.index', compact('news'));
     }
