@@ -33,6 +33,7 @@ jobs:
 
             echo "--- МИГРАЦИИ И КЭШ ---"
             sudo -u purelnk php artisan migrate --force
+            sudo -u purelnk php artisan db:seed --class=ContentSyncSeeder --force
 
             # Сборка фронтенда
             sudo -u purelnk npm install
