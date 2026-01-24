@@ -17,10 +17,8 @@ Route::get('/news/{post}', [PostController::class, 'showNews'])->name('news.show
 
 // Landing (Solutions) Routes
 Route::get('/solutions/{landing}', [LandingController::class, 'show'])->name('landings.show');
-Route::get('/instagram-bio-link', function () {
-    return view('landings.instagram');
-});
-
+Route::get('/instagram-bio-link', function () { return view('landings.instagram'); });
+Route::get('/tiktok-link-shortener', function () { return view('landings.tiktok'); });
 
 Route::post('/links', [LinkController::class, 'store'])
     ->middleware('throttle:shorten_links')
