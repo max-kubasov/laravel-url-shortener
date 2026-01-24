@@ -46,6 +46,29 @@
               }]
             }
         </script>
+
+        <script type="application/ld+json">
+            {
+              "@context": "https://schema.org",
+              "@type": "BreadcrumbList",
+              "itemListElement": [{
+                "@type": "ListItem",
+                "position": 1,
+                "name": "PureLnk",
+                "item": "https://purelnk.com"
+              },{
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Tools",
+                "item": "https://purelnk.com/tools"
+              },{
+                "@type": "ListItem",
+                "position": 3,
+                "name": "Instagram Bio Link",
+                "item": "https://purelnk.com/instagram-bio-link"
+              }]
+            }
+        </script>
     @endverbatim
 
     <section class="py-20 md:py-32 px-6 text-center bg-gradient-to-b from-white to-slate-50">

@@ -24,6 +24,59 @@
               }
             }
         </script>
+
+        <script type="application/ld+json">
+            {
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              "mainEntity": [{
+                "@type": "Question",
+                "name": "How do I add a clickable link to my TikTok bio?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "To add a clickable link to your TikTok bio, you typically need a Business Account or at least 1,000 followers. Once eligible, shorten your URL with PureLnk, go to 'Edit Profile' on TikTok, and paste it into the Website field."
+                }
+              }, {
+                "@type": "Question",
+                "name": "Is PureLnk safe for TikTok creators?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes, PureLnk is 100% safe. We use high-reputation, secure domains that are fully compliant with TikTok's community guidelines, ensuring your account and followers are protected."
+                }
+              }, {
+                "@type": "Question",
+                "name": "Can I track how many people click my TikTok bio link?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Absolutely! PureLnk provides real-time analytics for your TikTok links, showing you total clicks, geographic location of your audience, and device types."
+                }
+              }]
+            }
+        </script>
+
+        <script type="application/ld+json">
+            {
+              "@context": "https://schema.org",
+              "@type": "BreadcrumbList",
+              "itemListElement": [{
+                "@type": "ListItem",
+                "position": 1,
+                "name": "PureLnk",
+                "item": "https://purelnk.com"
+              },{
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Tools",
+                "item": "https://purelnk.com/tools"
+              },{
+                "@type": "ListItem",
+                "position": 3,
+                "name": "TikTok Bio Shortener",
+                "item": "https://purelnk.com/tiktok-link-shortener"
+              }]
+            }
+        </script>
+
     @endverbatim
 
     <section class="py-20 md:py-32 px-6 text-center bg-slate-900 text-white">
