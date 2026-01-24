@@ -17,6 +17,9 @@ Route::get('/news/{post}', [PostController::class, 'showNews'])->name('news.show
 
 // Landing (Solutions) Routes
 Route::get('/solutions/{landing}', [LandingController::class, 'show'])->name('landings.show');
+Route::get('/instagram-bio-link', function () {
+    return view('landings.instagram');
+});
 
 
 Route::post('/links', [LinkController::class, 'store'])
