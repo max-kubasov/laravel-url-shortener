@@ -20,6 +20,7 @@ Route::get('/tools', function () { return view('tools.index'); });
 Route::get('/solutions/{landing}', [LandingController::class, 'show'])->name('landings.show');
 Route::get('/instagram-bio-link', function () { return view('landings.instagram'); });
 Route::get('/tiktok-link-shortener', function () { return view('landings.tiktok'); });
+Route::get('/whatsapp-link-generator', function () { return view('landings.whatsapp'); });
 
 Route::post('/links', [LinkController::class, 'store'])
     ->middleware('throttle:shorten_links')
