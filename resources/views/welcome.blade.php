@@ -1,9 +1,38 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>URL Shortener</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>PureLnk | Professional URL Shortener & Link Management</title>
+    <meta name="description" content="Shorten, brand, and track your links with PureLnk. The most advanced link management platform for marketing and social media.">
+    <meta name="keywords" content="url shortener, link tracker, branded links, instagram bio link, whatsapp link generator">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://purelnk.com/">
+    <meta property="og:title" content="PureLnk | Professional URL Shortener">
+    <meta property="og:description" content="Boost your click-through rate with clean, branded links and real-time analytics.">
+    <meta property="og:image" content="https://purelnk.com/og-image.jpg"> <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="PureLnk | Professional URL Shortener">
+
     <script src="https://cdn.tailwindcss.com"></script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    @verbatim
+    <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "name": "PureLnk",
+          "url": "https://purelnk.com/",
+          "logo": "https://purelnk.com/logo.png",
+          "sameAs": [
+            "https://twitter.com/purelnk",
+            "https://linkedin.com/company/purelnk"
+          ]
+        }
+    </script>
+    @endverbatim
 </head>
 <body class="bg-slate-900 px-6 py-12 flex flex-col min-h-screen font-sans antialiased">
 
@@ -23,6 +52,7 @@
 </nav>
 
 <div class="flex-grow flex flex-col items-center">
+    <h1 class="sr-only">PureLnk - The Most Advanced URL Shortener & Link Management Tool</h1>
     @if ($errors->has('original_url'))
         <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 w-full max-w-md" role="alert">
             <p class="font-bold">Security Warning!</p>
