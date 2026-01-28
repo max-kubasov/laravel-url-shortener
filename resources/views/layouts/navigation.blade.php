@@ -16,6 +16,12 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
                 </div>
+
+                @if(auth()->user()->is_admin)
+                    <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')" class="text-red-600 font-bold">
+                        {{ __('Admin Panel') }}
+                    </x-nav-link>
+                @endif
             </div>
 
             <!-- Settings Dropdown -->

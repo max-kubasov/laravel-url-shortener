@@ -5,8 +5,13 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\LandingController;
+use App\Http\Controllers\Admin\DashboardController;
+
 
 Route::get('/', [LinkController::class, 'index'])->name('home');
+Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+});
 
 // Blog Routes
 Route::get('/blog', [PostController::class, 'blogIndex'])->name('blog.index');
