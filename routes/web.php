@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\UserDashboardController;
 
 
 Route::get('/', [LinkController::class, 'index'])->name('home');
@@ -50,7 +51,8 @@ Route::delete('/links/{link}', [LinkController::class, 'destroy'])
     ->name('links.destroy');
 
 Route::middleware(['auth', 'not_banned'])->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    //Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [UserDashboardController::class, 'index'])->name('dashboard');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
