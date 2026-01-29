@@ -17,8 +17,23 @@ class DashboardController extends Controller
             'total_clicks' => Link::sum('clicks'),
             'recent_links' => Link::with('user')->latest()->take(10)->get(),
             'top_users' => User::withCount('links')->orderBy('links_count', 'desc')->take(5)->get(),
+            'users' => \App\Models\User::withCount('links')->get(),
         ];
 
         return view('admin.dashboard', $stats);
+    }
+
+    public function toggleBan(User $user)
+    {
+        // Запрещаем админу банить самого себя
+        if ($user->id === auth()->id()) {
+            return back()->with('error', 'You cannot ban yourself!');
+        }
+
+        $user->update([
+            'is_banned' => !$user->is_banned
+        ]);
+
+        return back()->with('success', 'User status updated successfully.');
     }
 }

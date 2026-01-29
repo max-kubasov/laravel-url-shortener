@@ -9,8 +9,11 @@ use App\Http\Controllers\Admin\DashboardController;
 
 
 Route::get('/', [LinkController::class, 'index'])->name('home');
-Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
+
+Route::middleware(['auth', 'admin', 'not_banned'])->prefix('admin')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+    // Новый роут для бана
+    Route::post('/users/{user}/ban', [DashboardController::class, 'toggleBan'])->name('admin.users.ban');
 });
 
 // Blog Routes
@@ -46,7 +49,8 @@ Route::delete('/links/{link}', [LinkController::class, 'destroy'])
     ->middleware(['auth'])
     ->name('links.destroy');
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'not_banned'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

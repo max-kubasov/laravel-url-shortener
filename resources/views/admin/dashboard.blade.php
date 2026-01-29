@@ -44,6 +44,54 @@
                     @endforeach
                     </tbody>
                 </table>
+
+                <div class="mt-8 bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
+                        <h3 class="font-bold text-slate-800">All Users</h3>
+                    </div>
+                    <table class="w-full text-left">
+                        <thead>
+                        <tr class="text-slate-400 text-xs uppercase">
+                            <th class="px-6 py-3">Name</th>
+                            <th class="px-6 py-3">Email</th>
+                            <th class="px-6 py-3">Links</th>
+                            <th class="px-6 py-3 text-right">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 text-sm">
+                        @foreach($users as $user)
+                            <tr class="{{ $user->is_banned ? 'bg-red-50/50' : '' }}">
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center">
+            <span class="font-medium {{ $user->is_banned ? 'text-red-700' : 'text-slate-900' }}">
+                {{ $user->name }}
+            </span>
+                                        @if($user->is_banned)
+                                            <span class="ml-2 px-2 py-0.5 text-[10px] font-bold bg-red-100 text-red-600 border border-red-200 rounded uppercase">
+                    Banned
+                </span>
+                                        @endif
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 text-slate-500">{{ $user->email }}</td>
+                                <td class="px-6 py-4 font-semibold">{{ $user->links_count }}</td>
+                                <td class="px-6 py-4 text-right">
+                                    <form action="{{ route('admin.users.ban', $user) }}" method="POST">
+                                        @csrf
+                                        <button type="submit"
+                                                class="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm
+                {{ $user->is_banned
+                    ? 'bg-emerald-50 text-emerald-600 border border-emerald-200 hover:bg-emerald-100'
+                    : 'bg-red-50 text-red-600 border border-red-200 hover:bg-red-100' }}">
+                                            {{ $user->is_banned ? 'Unlock User' : 'Block User' }}
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
