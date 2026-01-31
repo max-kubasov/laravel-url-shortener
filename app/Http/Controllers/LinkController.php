@@ -28,36 +28,42 @@ class LinkController extends Controller
 
     public function store(Request $request, GoogleSafeBrowsingService $service)
     {
-        // 1. Валидация
+        // 1. Валидация входных данных (всегда первая)
         $request->validate([
             'original_url' => 'required|url',
             'custom_code'  => [
-                'nullable',
-                'alpha_dash', // только буквы, цифры, тире и подчеркивания
-                'min:3',
-                'max:20',
-                'unique:links,short_code' // проверка уникальности в таблице links, колонка short_code
+                'nullable', 'alpha_dash', 'min:3', 'max:20', 'unique:links,short_code'
             ],
         ]);
+
+        // --- Проверка лимитов подписки ---
+        if (auth()->check()) {
+            $user = auth()->user();
+            $maxLinks = config("plans.{$user->plan}.max_links", 10);
+
+            if ($user->links()->count() >= $maxLinks) {
+                return back()->with('error', "Limit reached! You can only have {$maxLinks} links on " . strtoupper($user->plan) . " plan.");
+            }
+        }
+        // ----------------------------------------------
 
         // 2. Получаем очищенный URL
         $url = $request->input('original_url');
 
-        // 3. Дополнительная проверка безопасности через сервис
+        // 3. Дополнительная проверка безопасности через сервис (только если прошли лимиты)
         if (!$service->isSafe($url)) {
             return back()->withErrors(['original_url' => 'This URL is flagged as unsafe by Google Safe Browsing.']);
         }
 
-        // 4. Логика выбора кода: если ввели кастомный — берем его, если нет — генерируем случайный
+        // 4. Логика выбора кода
         $shortCode = $request->custom_code ?? \Illuminate\Support\Str::random(6);
 
         $link = Link::create([
             'original_url' => $request->original_url,
             'short_code'   => $shortCode,
-            'user_id'      => auth()->id(), // Привязываем ID юзера (может быть null, если гость)
+            'user_id'      => auth()->id(),
         ]);
 
-        // Если это авторизованный пользователь, возвращаем его в дашборд с уведомлением
         if (auth()->check()) {
             return back()->with('success', 'Short link generated successfully!');
         }

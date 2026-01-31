@@ -3,10 +3,12 @@
 namespace App\Providers;
 
 
+use App\Models\User;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Gate;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -40,5 +42,25 @@ class AppServiceProvider extends ServiceProvider
             return Limit::perMinute(3)->by($ip);
 
         });
+
+
+
+
+        // Регистрируем универсальный "шлюз" для проверки фич
+        // $feature — это строка-название (например, 'dark-mode' или 'advanced-stats')
+        Gate::define('access-feature', function (User $user, string $feature) {
+
+            // 1. Пока что разрешаем всё всем
+            return true;
+
+            /* В БУДУЩЕМ здесь будет такая логика:
+
+            $plans = config('plans');
+            $userPlan = $user->plan; // 'free' или 'pro'
+
+            return in_array($feature, $plans[$userPlan]['features']);
+            */
+        });
+
     }
 }

@@ -19,6 +19,47 @@
                 </div>
             </div>
 
+            @auth
+                <div class="mb-6 p-5 bg-white border border-slate-200 shadow-sm rounded-2xl">
+                    <div class="flex items-center justify-between mb-3">
+                        <div>
+                            <h4 class="text-sm font-bold text-slate-800 uppercase tracking-tight">Usage Statistics</h4>
+                            <p class="text-xs text-slate-500">Current Plan: <span class="text-blue-600 font-semibold uppercase">{{ auth()->user()->plan }}</span></p>
+                        </div>
+                        <div class="text-right">
+                <span class="text-lg font-bold text-slate-900 leading-none">
+                    {{ auth()->user()->links()->count() }} / {{ config("plans." . auth()->user()->plan . ".max_links") }}
+                </span>
+                            <p class="text-[10px] text-slate-400 uppercase font-medium">Links Used</p>
+                        </div>
+                    </div>
+
+                    @php
+                        $used = auth()->user()->links()->count();
+                        $max = config("plans." . auth()->user()->plan . ".max_links");
+                        // Защита от деления на ноль, если в конфиге пусто
+                        $percentage = $max > 0 ? min(($used / $max) * 100, 100) : 0;
+
+                        // Цвет полоски меняется на красный, если лимит близок к концу
+                        $barColor = $percentage > 90 ? 'bg-red-500' : ($percentage > 70 ? 'bg-amber-500' : 'bg-blue-600');
+                    @endphp
+
+                    <div class="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
+                        <div class="{{ $barColor }} h-full rounded-full transition-all duration-700 ease-out shadow-sm"
+                             style="width: {{ $percentage }}%">
+                        </div>
+                    </div>
+
+                    @if($percentage >= 100)
+                        <div class="mt-3 p-2 bg-red-50 border border-red-100 rounded-lg">
+                            <p class="text-[11px] text-red-600 text-center font-medium">
+                                ⚠️ You've reached your limit. Delete old links or upgrade your plan.
+                            </p>
+                        </div>
+                    @endif
+                </div>
+            @endauth
+
             <div class="bg-white overflow-hidden shadow-sm rounded-xl border border-gray-200">
                 <div class="p-8">
                     <h3 class="text-lg font-bold text-gray-800 mb-4">Create a new short link</h3>
