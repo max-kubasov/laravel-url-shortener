@@ -128,4 +128,37 @@ class LinkController extends Controller
             ->header('Content-Disposition', "attachment; filename=\"{$fileName}\"");
     }
 
+    public function update(Request $request, Link $link, GoogleSafeBrowsingService $service)
+    {
+        $user = auth()->user();
+
+        // 1. Проверяем, что ссылку редактирует владелец
+        if ($link->user_id !== $user->id) {
+            abort(403);
+        }
+
+        // --- Проверка тарифного плана ---
+        // Проверяем, разрешено ли редактирование в конфиге для текущего плана пользователя
+        if (!config("plans.{$user->plan}.can_edit_links", false)) {
+            return back()->with('error', 'Updating destination URLs is only available on premium plans.');
+        }
+
+        // 2. Валидация новой длинной ссылки
+        $request->validate([
+            'original_url' => 'required|url|max:2048',
+        ]);
+
+        // 3. Проверка через Google Safe Browsing
+        if (!$service->isSafe($request->original_url)) {
+            return back()->withErrors(['original_url' => 'This URL is flagged as unsafe by Google Safe Browsing.']);
+        }
+
+        // 4. Обновляем только целевой URL
+        $link->update([
+            'original_url' => $request->original_url
+        ]);
+
+        return back()->with('success', 'Destination URL updated successfully!');
+    }
+
 }

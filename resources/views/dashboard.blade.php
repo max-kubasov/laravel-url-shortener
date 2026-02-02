@@ -128,7 +128,51 @@
                                 <td class="px-8 py-4">
                                     <div class="text-sm text-gray-400 italic mb-1">Target:</div>
                                     <div class="text-sm font-medium text-gray-900 truncate max-w-xs" title="{{ $link->original_url }}">
-                                        {{ $link->original_url }}
+                                        <div x-data="{ open: false }">
+                                            <div class="flex items-center space-x-2">
+                                                <span class="truncate max-w-xs text-slate-600">{{ $link->original_url }}</span>
+                                                @if(config("plans." . auth()->user()->plan . ".can_edit_links"))
+                                                <button @click="open = true" class="text-slate-400 hover:text-blue-600 transition-colors">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                                    </svg>
+                                                </button>
+                                                @else
+                                                    <span title="Upgrade to PRO to edit" class="text-slate-300 cursor-not-allowed"></span>
+                                                @endif
+                                            </div>
+
+                                            <div x-show="open"
+                                                 class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+                                                 x-cloak>
+                                                <div @click.away="open = false" class="bg-white rounded-xl shadow-lg p-6 w-full max-w-md">
+                                                    <h3 class="text-lg font-bold mb-4">Edit Destination URL</h3>
+
+                                                    <form action="{{ route('links.update', $link) }}" method="POST">
+                                                        @csrf
+                                                        @method('PATCH')
+
+                                                        <div class="mb-4">
+                                                            <label class="block text-sm font-medium text-slate-700 mb-1">New Long URL</label>
+                                                            <input type="url" name="original_url" value="{{ $link->original_url }}" required
+                                                                   class="w-full border-slate-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                                        </div>
+
+                                                        <div class="flex justify-end space-x-3">
+                                                            <button type="button" @click="open = false"
+                                                                    class="px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-lg">
+                                                                Cancel
+                                                            </button>
+                                                            <button type="submit"
+                                                                    class="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg">
+                                                                Save Changes
+                                                            </button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                     </div>
                                 </td>
                                 <td class="px-8 py-4">
