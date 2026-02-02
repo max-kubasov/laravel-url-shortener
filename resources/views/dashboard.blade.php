@@ -63,6 +63,17 @@
             <div class="bg-white overflow-hidden shadow-sm rounded-xl border border-gray-200">
                 <div class="p-8">
                     <h3 class="text-lg font-bold text-gray-800 mb-4">Create a new short link</h3>
+                    @if (session('error'))
+                        <div class="mb-4 p-4 bg-red-50 border-l-4 border-red-500 text-red-700">
+                            <p class="text-sm font-medium">{{ session('error') }}</p>
+                        </div>
+                    @endif
+
+                    @if (session('success'))
+                        <div class="mb-4 p-4 bg-green-50 border-l-4 border-green-500 text-green-700">
+                            <p class="text-sm font-medium">{{ session('success') }}</p>
+                        </div>
+                    @endif
                     <form action="{{ route('links.store') }}" method="POST" class="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
                         @csrf
                         <div class="md:col-span-6">

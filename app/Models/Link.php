@@ -7,7 +7,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Link extends Model
 {
-    protected $fillable = ['original_url', 'short_code', 'clicks', 'user_id'];
+    protected $fillable = [
+        'original_url',
+        'short_code',
+        'clicks',
+        'user_id',
+        'is_custom',
+    ];
 
     public function user(): BelongsTo
     {

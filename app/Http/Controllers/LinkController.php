@@ -36,13 +36,28 @@ class LinkController extends Controller
             ],
         ]);
 
-        // --- Проверка лимитов подписки ---
+        // --- ПРОВЕРКА 1: Общий лимит ссылок (всего) ---
         if (auth()->check()) {
             $user = auth()->user();
             $maxLinks = config("plans.{$user->plan}.max_links", 10);
 
             if ($user->links()->count() >= $maxLinks) {
                 return back()->with('error', "Limit reached! You can only have {$maxLinks} links on " . strtoupper($user->plan) . " plan.");
+            }
+        }
+
+        // --- ПРОВЕРКА 2: Лимит на кастомные алиасы (в месяц) ---
+        if ($request->filled('custom_code')) {
+            $maxCustom = config("plans.{$user->plan}.max_custom_slugs");
+
+            $monthlyCustomCount = $user->links()
+                ->where('is_custom', true) // используем наше новое поле
+                ->whereMonth('created_at', now()->month)
+                ->whereYear('created_at', now()->year)
+                ->count();
+
+            if ($monthlyCustomCount >= $maxCustom) {
+                return back()->with('error', "Monthly limit for custom aliases reached ({$maxCustom}).");
             }
         }
         // ----------------------------------------------
@@ -58,10 +73,13 @@ class LinkController extends Controller
         // 4. Логика выбора кода
         $shortCode = $request->custom_code ?? \Illuminate\Support\Str::random(6);
 
+        $isCustom = $request->filled('custom_code');
+
         $link = Link::create([
             'original_url' => $request->original_url,
             'short_code'   => $shortCode,
             'user_id'      => auth()->id(),
+            'is_custom'    => $isCustom,
         ]);
 
         if (auth()->check()) {
