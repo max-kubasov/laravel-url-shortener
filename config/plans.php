@@ -19,4 +19,11 @@ return [
         'can_edit_links' => true,
         'features' => ['detailed-analytics', 'no-ads'],
     ],
+    'ultra' => [
+        'max_links' => 10000,
+        'max_custom_slugs' => 5000,
+        'can_edit_links' => true,
+        'can_view_analytics' => true,
+        'features' => ['detailed-analytics', 'no-ads'],
+    ],
 ];

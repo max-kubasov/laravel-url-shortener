@@ -36,6 +36,7 @@ Route::post('/links', [LinkController::class, 'store'])
     ->name('links.store');
 
 Route::patch('/links/{link}', [LinkController::class, 'update'])->name('links.update');
+Route::get('/links/{link}/stats', [LinkController::class, 'stats'])->name('links.stats');
 
 // Маршрут для генерации и скачивания QR-кода
 Route::get('/links/{link:short_code}/qr/{format}', [LinkController::class, 'downloadQr'])

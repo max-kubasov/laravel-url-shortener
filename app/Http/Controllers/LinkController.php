@@ -91,6 +91,16 @@ class LinkController extends Controller
 
     public function redirect(Link $link)
     {
+        // Пытаемся определить гео по IP
+        // Используем библиотеку stevebauman/location
+        $location = \Stevebauman\Location\Facades\Location::get(request()->ip());
+
+        // Сохраняем данные о клике
+        $link->visits()->create([
+            'country_code' => $location ? $location->countryCode : 'Unknown',
+            'country_name' => $location ? $location->countryName : 'Unknown',
+            'ip_address'   => request()->ip(),
+        ]);
 
         $link->increment('clicks');
 
@@ -159,6 +169,23 @@ class LinkController extends Controller
         ]);
 
         return back()->with('success', 'Destination URL updated successfully!');
+    }
+
+    public function stats(Link $link)
+    {
+        // Проверяем, есть ли у пользователя план Ultra или он админ
+        if (!auth()->user()->is_admin && !config("plans." . auth()->user()->plan . ".can_view_analytics")) {
+            abort(403, 'Доступ запрещен. Обновите план.');
+        }
+
+        // Получаем статистику по странам
+        $countries = $link->visits()
+            ->select('country_name', 'country_code', \DB::raw('count(*) as total'))
+            ->groupBy('country_name', 'country_code')
+            ->orderBy('total', 'desc')
+            ->get();
+
+        return view('links.stats', compact('link', 'countries'));
     }
 
 }
